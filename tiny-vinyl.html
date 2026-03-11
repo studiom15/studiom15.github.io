@@ -16,6 +16,7 @@
       --bg-primary: #FFFFFF;
       --bg-surface: #F7F7F7;
       --color-magenta: #CD0282;
+      --color-magenta-dark: #A00065; /* Added for hover states */
       --color-teal: #87D6D3;
       --color-text: #000000;
       --color-text-muted: #555555;
@@ -39,10 +40,9 @@
     }
 
     /* ════════════════════════════════════════════════════════════
-       BASE STYLES  (shared by both desktop and mobile)
+       BASE STYLES
        ════════════════════════════════════════════════════════════ */
 
-    /* ── Reset ────────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
     body {
@@ -59,15 +59,16 @@
     button { cursor: pointer; border: none; background: none; font-family: inherit; }
     img { max-width: 100%; height: auto; display: block; }
 
-    /* ── Typography (base) ────────────────────────────────────── */
+    /* Typography */
     h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 700; line-height: 1.1; color: var(--color-text); }
-    h1 em { font-family: var(--font-hand); color: var(--color-magenta); font-style: normal; font-size: 1.2em; display: inline-block; transform: rotate(-3deg); margin-left: 0.2em; }
+    /* Added subtle margin-right to prevent crowding punctuation */
+    h1 em { font-family: var(--font-hand); color: var(--color-magenta); font-style: normal; font-size: 1.2em; display: inline-block; transform: rotate(-3deg); margin-left: 0.2em; margin-right: 0.1em; }
     .label { font-family: var(--font-mono); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1.5px; color: var(--color-magenta); font-weight: 500; display: block; margin-bottom: var(--space-xs); }
 
-    /* ── Layout (base) ────────────────────────────────────────── */
+    /* Layout */
     .section--surface { background: var(--bg-surface); border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft); }
 
-    /* ── Buttons (base) ───────────────────────────────────────── */
+    /* Buttons */
     .btn {
       display: inline-flex; align-items: center; justify-content: center;
       border-radius: 999px; font-weight: 700; font-family: var(--font-mono);
@@ -78,10 +79,12 @@
     }
     .btn:active { transform: scale(0.98); }
     .btn-primary { background: var(--color-magenta); color: #fff; border-color: var(--color-magenta); }
+    /* Enhanced contrast hover state */
+    .btn-primary:hover { background: var(--color-magenta-dark); border-color: var(--color-magenta-dark); color: #fff; }
     .btn-white { background: #fff; color: #000; border-color: #fff; }
     .btn-outline { border-color: var(--border-soft); }
 
-    /* ── Navigation (base) ────────────────────────────────────── */
+    /* Navigation */
     .nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       background: transparent;
@@ -107,7 +110,7 @@
     .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
     .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-    /* ── Record animation ─────────────────────────────────────── */
+    /* Record animation */
     .record {
       width: 100%; height: 100%; border-radius: 50%; background: #111;
       background-image: repeating-radial-gradient(#111 0px, #1a1a1a 2px, #0a0a0a 4px);
@@ -130,72 +133,85 @@
       background: var(--color-teal); border-radius: 50%;
     }
 
-    /* ── Ticker ───────────────────────────────────────────────── */
+    /* Ticker */
     .ticker { background: #000; color: #fff; overflow: hidden; font-family: var(--font-mono); text-transform: uppercase; border-bottom: 2px solid #000; }
     .ticker-track { display: flex; width: max-content; animation: marquee 35s linear infinite; }
     @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
     .ticker-item { white-space: nowrap; }
 
-    /* ── Cards & components (base) ────────────────────────────── */
+    /* Cards & components */
     .quick-card { background: #fff; border-radius: 16px; border: 2px solid var(--border-soft); display: flex; flex-direction: column; transition: 0.3s ease; }
     .quick-card-link { font-family: var(--font-mono); font-weight: 700; color: var(--color-magenta); font-size: 0.8rem; }
-    .highlight-item { border-left: 4px solid var(--color-teal); padding-left: 1.5rem; margin-bottom: 2rem; }
+    
+    /* Added hover state for highlight items */
+    .highlight-item { border-left: 4px solid var(--color-teal); padding-left: 1.5rem; margin-bottom: 2rem; transition: all 0.3s ease; }
+    .highlight-item:hover { transform: translateX(8px); border-left-color: var(--color-magenta); }
     .highlight-price { font-family: var(--font-mono); color: var(--color-magenta); font-weight: 700; }
+    
     .mascot-strip { background: var(--bg-surface); }
     .mascot-strip .container { display: flex; align-items: center; }
-    .mascot-image { border: 3px solid #000; border-radius: 50%; flex-shrink: 0; }
+/* Desktop Styles (Default) */
+.mascot-image {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  padding: 15px; 
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .mascot-image {
+    width: 120px; /* Smaller size for mobile */
+    height: 120px;
+    padding: 10px; /* Slightly less padding to keep the logo clear */
+    margin: 0 auto 1rem auto; /* Centers the image and adds space below it */
+  }
+}
     .info-card { background: #fff; border-radius: 16px; border: 2px solid var(--border-soft); }
     .community-link-item { display: flex; align-items: center; background: #fff; border: 2px solid var(--border-soft); border-radius: 12px; margin-bottom: 1rem; transition: 0.25s ease; }
     .community-link-icon { font-size: 1.5rem; flex-shrink: 0; }
 
-    /* ── Footer (base) ────────────────────────────────────────── */
+    /* Form Styles */
+    .form-input { padding: 0.9rem 1.2rem; border: 2px solid var(--border-soft); border-radius: 999px; font-family: var(--font-sans); width: 100%; transition: border-color 0.3s ease; }
+    .form-input:focus { outline: none; border-color: var(--color-teal); }
+
+    /* Footer */
     .footer { background: #000; color: #fff; }
     .footer h4 { color: var(--color-teal); font-family: var(--font-mono); text-transform: uppercase; font-size: 0.9rem; }
     .footer-links li { font-size: 0.9rem; }
     .footer-links a:hover { color: var(--color-teal); }
     .footer-bottom { border-top: 1px solid #333; font-family: var(--font-mono); font-size: 0.75rem; color: #777; display: flex; justify-content: space-between; align-items: center; }
 
-    /* ── Reveal animations ────────────────────────────────────── */
+    /* Reveal animations */
     .reveal { opacity: 0; transform: translateY(20px); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
-    /* ── Reduced motion ───────────────────────────────────────── */
     @media (prefers-reduced-motion: reduce) {
       .ticker-track, .spinning { animation: none; }
       .reveal { transition: none; }
     }
 
-    /* ── Print ────────────────────────────────────────────────── */
-    @media print {
-      .nav, .ticker, .spin-toggle, .mobile-cta-bar, .mobile-menu { display: none !important; }
-      .hero { min-height: auto; padding: 2rem 0; }
-      .reveal { opacity: 1; transform: none; }
-    }
-
 
     /* ════════════════════════════════════════════════════════════
-       DESKTOP  (769px and above)
-       Full two-column layouts, hover states, spacious padding
+       DESKTOP
        ════════════════════════════════════════════════════════════ */
     @media (min-width: 769px) {
-
-      /* Typography */
       h1 { font-size: 4.5rem; margin-bottom: var(--space-sm); letter-spacing: -0.02em; }
       h2 { font-size: 3.2rem; margin-bottom: var(--space-md); }
       h3 { font-size: 1.8rem; }
 
-      /* Layout */
       .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
       .section { padding: 5rem 0; }
       .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
       .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
 
-      /* Buttons */
       .btn { padding: 0.9rem 2.2rem; font-size: 0.85rem; }
       .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-      .btn-primary:hover { background: #000; color: #fff; border-color: #000; }
 
-      /* Nav — desktop */
       .nav { padding: 1.25rem 0; }
       .nav-links { display: flex; gap: 1.5rem; font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; align-items: center; }
       .nav-links a { color: #000; }
@@ -203,23 +219,22 @@
       .mobile-menu { display: none !important; }
       .nav-logo-text { font-size: 1.5rem; }
 
-      /* Hero */
-      .hero { background-color: var(--color-teal); padding: 9rem 0 6rem; border-bottom: 2px solid #000; display: flex; align-items: center; min-height: 90vh; }
+      /* Reduced hero height for better fold visibility */
+      .hero { background-color: var(--color-teal); padding: 9rem 0 6rem; border-bottom: 2px solid #000; display: flex; align-items: center; min-height: 80vh; }
       .hero .container { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 4rem; align-items: center; }
       .hero h1, .hero p { color: #000; }
       .hero .label { color: #000; border-bottom: 1.5px solid #000; display: inline-block; width: fit-content; margin-bottom: 1rem; }
       .hero-text p { font-size: 1.25rem; font-weight: 500; margin-bottom: 2.5rem; max-width: 500px; }
       .hero-btns { display: flex; gap: 1rem; }
 
-      /* Record */
       .record-wrap { position: relative; width: 360px; height: 360px; display: flex; align-items: center; justify-content: center; }
-      .spin-toggle { position: absolute; bottom: 0; right: 0; background: #000; color: #fff; width: 50px; height: 50px; border-radius: 50%; z-index: 10; font-family: var(--font-mono); font-size: 0.6rem; border: 2px solid #fff; }
+      /* Enlarged and pushed out spin toggle */
+      .spin-toggle { position: absolute; bottom: -10px; right: -10px; background: #000; color: #fff; width: 64px; height: 64px; border-radius: 50%; z-index: 10; font-family: var(--font-mono); font-size: 0.65rem; border: 2px solid #fff; transition: transform 0.2s; }
+      .spin-toggle:hover { transform: scale(1.05); }
 
-      /* Ticker */
       .ticker { padding: 1.2rem 0; font-size: 0.85rem; }
       .ticker-item { padding: 0 2rem; }
 
-      /* Cards */
       .quick-card { padding: 2.5rem; }
       .quick-card h3 { margin-bottom: 1rem; }
       .quick-card p { flex: 1; }
@@ -227,46 +242,36 @@
       .quick-card:hover { transform: translateY(-4px); border-color: var(--color-teal); box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
       .highlight-price { font-size: 1.5rem; }
 
-      /* Mascot */
       .mascot-strip { padding: 5rem 0; }
       .mascot-strip .container { gap: 3rem; }
       .mascot-image { width: 180px; }
 
-      /* Info cards */
       .info-card { padding: 3rem; }
 
-      /* Community */
       .community-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
       .community-link-item { gap: 1.5rem; padding: 1.5rem; min-height: 70px; }
       .community-link-item:hover { border-color: var(--color-teal); transform: translateX(5px); }
 
-      /* Footer */
       .footer { padding: 6rem 0 3rem; }
       .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4rem; margin-bottom: 3rem; }
       .footer h4 { margin-bottom: 1.25rem; }
       .footer-links li { margin-bottom: 0.75rem; }
       .footer-bottom { padding-top: 2rem; flex-direction: row; }
-
-      /* Mobile-only elements: hidden on desktop */
       .mobile-cta-bar { display: none !important; }
     }
 
 
     /* ════════════════════════════════════════════════════════════
-       MOBILE  (768px and below)
-       Single column, large tap targets, bottom CTA bar,
-       full-screen hamburger menu, simplified footer
+       MOBILE
        ════════════════════════════════════════════════════════════ */
     @media (max-width: 768px) {
-
-      /* Typography — larger base for readability */
       h1 { font-size: 2.6rem; margin-bottom: 1rem; letter-spacing: -0.01em; }
       h2 { font-size: 2rem; margin-bottom: 1.5rem; }
       h3 { font-size: 1.4rem; }
       p { font-size: 1rem; }
-      .label { font-size: 0.72rem; }
+      /* Boosted mobile label legibility */
+      .label { font-size: 0.85rem; }
 
-      /* Layout — full-width single column, generous padding */
       .container {
         max-width: 100%;
         padding: 0 1.25rem;
@@ -274,71 +279,45 @@
         padding-right: max(1.25rem, calc(var(--safe-right) + 1.25rem));
       }
       .section { padding: 3rem 0; }
-      .grid-4 { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+      
+      /* Optimized 2x2 mobile grid to reduce vertical scroll fatigue */
+      .grid-4 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+      .grid-4 .quick-card h3 { font-size: 1.1rem; }
+      .grid-4 .quick-card p { font-size: 0.85rem; }
+      
       .grid-2 { display: grid; grid-template-columns: 1fr; gap: 1rem; }
 
-      /* Buttons — full width, larger touch targets */
       .btn { padding: 1rem 2rem; font-size: 0.82rem; min-height: 52px; width: 100%; justify-content: center; }
 
-      /* Body — space for fixed bottom CTA bar */
-      body { padding-bottom: max(80px, calc(var(--safe-bottom) + 80px)); }
+      /* Slightly increased padding for floating CTA bar */
+      body { padding-bottom: max(90px, calc(var(--safe-bottom) + 90px)); }
 
-      /* Nav — hamburger only */
       .nav { padding: 1rem 0; padding-top: max(1rem, var(--safe-top)); }
       .nav-links { display: none; }
       .nav-logo-text { font-size: 1.3rem; }
-      .nav-hamburger {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 5px;
-        /* 48×48 tap target */
-        width: 48px; height: 48px;
-      }
+      .nav-hamburger { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; width: 48px; height: 48px; }
       .nav-hamburger span { width: 22px; height: 2px; }
 
-      /* Full-screen mobile menu */
       .mobile-menu {
         position: fixed; top: 0; left: 0; right: 0; bottom: 0;
         background: var(--color-teal);
-        z-index: 99;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 1.25rem;
-        padding: 2rem 2rem max(2rem, var(--safe-bottom));
+        z-index: 99; flex-direction: column; align-items: center; justify-content: center;
+        gap: 1.25rem; padding: 2rem 2rem max(2rem, var(--safe-bottom));
         padding-top: max(5rem, calc(var(--safe-top) + 5rem));
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.3s ease;
-        /* Hidden by default — JS adds .open */
-        display: flex;
+        opacity: 0; pointer-events: none; transition: opacity 0.3s ease; display: flex;
       }
       .mobile-menu:not(.open) { pointer-events: none; opacity: 0; visibility: hidden; }
       .mobile-menu.open { opacity: 1; pointer-events: all; visibility: visible; }
-      .mobile-menu a {
-        font-family: var(--font-heading);
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #000;
-        border-bottom: 3px solid transparent;
-        padding-bottom: 0.25rem;
-        transition: border-color 0.2s;
-        /* Large tap targets */
-        min-height: 52px;
-        display: flex; align-items: center;
-      }
+      .mobile-menu a { font-family: var(--font-heading); font-size: 2.5rem; font-weight: 700; color: #000; border-bottom: 3px solid transparent; padding-bottom: 0.25rem; transition: border-color 0.2s; min-height: 52px; display: flex; align-items: center; }
       .mobile-menu a:active { border-bottom-color: #000; }
       .mobile-menu .mobile-cta { color: var(--color-magenta); margin-top: 0.5rem; }
 
-      /* Hero — stacked, centered */
+      /* Reduced hero height for mobile */
       .hero {
         background-color: var(--color-teal);
         padding: max(6rem, calc(var(--safe-top) + 6rem)) 0 5rem;
-        border-bottom: 2px solid #000;
-        display: flex; align-items: center;
-        min-height: 100svh;
+        border-bottom: 2px solid #000; display: flex; align-items: center;
+        min-height: 80svh;
       }
       .hero .container { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2.5rem; }
       .hero h1, .hero p { color: #000; }
@@ -347,82 +326,64 @@
       .hero-text p { font-size: 1.1rem; font-weight: 500; margin-bottom: 2rem; }
       .hero-btns { display: flex; flex-direction: column; gap: 0.75rem; width: 100%; }
 
-      /* Record — scaled to fit */
       .record-wrap { position: relative; width: min(300px, 80vw); height: min(300px, 80vw); display: flex; align-items: center; justify-content: center; }
-      .spin-toggle { position: absolute; bottom: 0; right: 0; background: #000; color: #fff; width: 52px; height: 52px; border-radius: 50%; z-index: 10; font-family: var(--font-mono); font-size: 0.6rem; border: 2px solid #fff; }
+      /* Enlarged spin toggle */
+      .spin-toggle { position: absolute; bottom: -5px; right: -5px; background: #000; color: #fff; width: 60px; height: 60px; border-radius: 50%; z-index: 10; font-family: var(--font-mono); font-size: 0.7rem; border: 2px solid #fff; }
 
-      /* Ticker */
       .ticker { padding: 0.9rem 0; font-size: 0.78rem; }
       .ticker-item { padding: 0 1.5rem; }
 
-      /* Quick cards — comfortable single-column */
-      .quick-card { padding: 1.75rem; }
+      .quick-card { padding: 1.5rem; }
       .quick-card h3 { margin-bottom: 0.6rem; }
       .quick-card-link { margin-top: 1.25rem; }
       .highlight-price { font-size: 1.3rem; }
 
-      /* Mascot — centered column */
       .mascot-strip { padding: 3rem 0; }
       .mascot-strip .container { flex-direction: column; text-align: center; align-items: center; gap: 1.5rem; }
       .mascot-image { width: 110px; }
 
-      /* Info cards */
       .info-card { padding: 1.75rem; }
 
-      /* Community — stacked */
       .community-inner { display: flex; flex-direction: column; gap: 2rem; }
       .community-link-item { gap: 1rem; padding: 1.25rem; min-height: 68px; }
       .community-link-item:active { background: var(--bg-surface); }
 
-      /* Footer — simplified, centered */
       .footer { padding: 3rem 0 1.5rem; padding-bottom: max(1.5rem, var(--safe-bottom)); }
       .footer-grid { display: flex; flex-direction: column; gap: 2rem; margin-bottom: 2rem; }
-      .footer-grid > div:first-child { display: none; } /* Hide logo/tagline on mobile to save space */
+      .footer-grid > div:first-child { display: none; }
       .footer h4 { margin-bottom: 0.75rem; font-size: 0.8rem; }
       .footer-links { display: flex; flex-wrap: wrap; gap: 0; }
       .footer-links li { width: 50%; margin-bottom: 0; }
       .footer-links a { display: flex; align-items: center; min-height: 44px; font-size: 0.88rem; padding-right: 0.5rem; }
       .footer-bottom { padding-top: 1.5rem; flex-direction: column; text-align: center; gap: 0.4rem; }
 
-      /* Floating bottom CTA bar */
       .mobile-cta-bar {
-        display: flex;
-        position: fixed;
-        bottom: 0; left: 0; right: 0;
-        z-index: 90;
-        background: #fff;
-        border-top: 2px solid #000;
-        padding: 0.75rem 1rem;
-        padding-bottom: max(0.75rem, var(--safe-bottom));
-        gap: 0.75rem;
-        opacity: 1;
-        transition: opacity 0.3s ease;
+        display: flex; position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
+        background: #fff; border-top: 2px solid #000;
+        padding: 0.75rem 1rem; padding-bottom: max(0.75rem, var(--safe-bottom));
+        gap: 0.75rem; opacity: 1; transition: opacity 0.3s ease;
       }
       .mobile-cta-bar a {
-        flex: 1;
-        padding: 0.85rem 0.5rem;
-        border-radius: 999px;
-        font-family: var(--font-mono);
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        min-height: 48px;
+        flex: 1; padding: 0.85rem 0.5rem; border-radius: 999px;
+        font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;
+        text-transform: uppercase; min-height: 48px;
         display: flex; align-items: center; justify-content: center;
       }
       .mobile-cta-bar .cta-visit { background: #000; color: #fff; border: 2px solid #000; }
       .mobile-cta-bar .cta-shop { background: var(--color-magenta); color: #fff; border: 2px solid var(--color-magenta); }
+      
+      .newsletter-form { flex-direction: column; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Mobile Menu Drawer -->
   <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation menu">
     <a href="visit.html">Visit Us</a>
     <a href="market.html">Market</a>
     <a href="events.html">Events</a>
     <a href="about.html">About</a>
-    <a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer" class="mobile-cta">Shop Discogs ↗</a>
+    <a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer" aria-label="Shop Discogs (Opens in a new tab)" class="mobile-cta">Shop Discogs ↗</a>
   </div>
 
   <nav class="nav" id="main-nav" role="navigation" aria-label="Main navigation">
@@ -436,7 +397,7 @@
         <li><a href="market.html">Market</a></li>
         <li><a href="events.html">Events</a></li>
         <li><a href="about.html">About</a></li>
-        <li><a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer" class="nav-cta">Shop Discogs ↗</a></li>
+        <li><a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer" aria-label="Shop Discogs (Opens in a new tab)" class="nav-cta">Shop Discogs ↗</a></li>
       </ul>
       <button class="nav-hamburger" id="nav-hamburger" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-menu">
         <span aria-hidden="true"></span>
@@ -447,18 +408,20 @@
   </nav>
 
   <main>
-    <!-- ── Hero ── -->
     <section class="hero" aria-label="Welcome">
       <div class="container">
         <div class="hero-text reveal">
           
           <h1>A neighborhood place for music <em>lovers.</em></h1>
-          <span class="label">In the heart of Adams Morgan since 2024</span>
-          <p>2501 Champlain St NW · Vinyl starting from $0 · Open 7 Days</p>
-          <div class="hero-btns">
-            <a href="visit.html" class="btn btn-white">Visit the Shop</a>
-            <a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Shop on Discogs ↗</a>
+          <div class="hero-info reveal">
+            <div class="info-badge">In the heart of Adams Morgan since 2024</div>
+            <div class="info-details">
+              <span>2501 Champlain St NW</span>
+              <span class="dot"></span>
+              <span>Open 7 Days</span>
+            </div>
           </div>
+
         </div>
         <div class="hero-visual reveal">
           <div class="record-wrap">
@@ -474,7 +437,6 @@
       </div>
     </section>
 
-    <!-- ── Ticker ── -->
     <div class="ticker" aria-label="Store highlights" aria-live="off">
       <div class="ticker-track" aria-hidden="true">
         <span class="ticker-item">Vinyl from $0 • Jazz Sundays • Adams Morgan, DC • Open 7 Days • CDs 4 for $10 • We Buy &amp; Trade • Record Store Day • Popup Market Every Weekend •</span>
@@ -482,7 +444,6 @@
       </div>
     </div>
 
-    <!-- ── Quick Links ── -->
     <section class="section" aria-labelledby="find-heading">
       <div class="container">
         <div style="text-align: center; margin-bottom: clamp(2rem, 5vw, 4rem);" class="reveal">
@@ -495,26 +456,25 @@
             <p>2501 Champlain St NW. Mon-Thu 4-7pm, Fri-Sat Noon-8pm, Sun Noon-6pm.</p>
             <span class="quick-card-link">Get directions →</span>
           </a>
-          <a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer" class="quick-card reveal">
+          <a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer" aria-label="Shop Online (Opens in a new tab)" class="quick-card reveal">
             <h3>Shop Online</h3>
-            <p>Browse our full selection on Discogs. Local pickup available — save on shipping.</p>
+            <p>Browse our full selection on Discogs. Local pickup available.</p>
             <span class="quick-card-link">Open Discogs →</span>
           </a>
           <a href="market.html" class="quick-card reveal">
             <h3>Popup Market</h3>
-            <p>Every weekend outside the shop. ~7 rotating vintage vendors. Come say hi.</p>
+            <p>Every weekend outside the shop. ~7 rotating vintage vendors.</p>
             <span class="quick-card-link">Learn more →</span>
           </a>
           <a href="events.html" class="quick-card reveal">
             <h3>Events</h3>
-            <p>Jazz Sundays, Record Store Day, live music, and more. Always something happening.</p>
+            <p>Jazz Sundays, Record Store Day, live music, and more.</p>
             <span class="quick-card-link">See events →</span>
           </a>
         </div>
       </div>
     </section>
 
-    <!-- ── Inventory ── -->
     <section class="section section--surface" aria-labelledby="inventory-heading">
       <div class="container">
         <div class="grid-2" style="align-items: center;">
@@ -544,20 +504,20 @@
       </div>
     </section>
 
-    <!-- ── Mascot Strip ── -->
     <section class="mascot-strip" aria-label="About our staff">
       <div class="container">
         <img src="assets/updated-logo.png" alt="Tiny Vinyl Mascot" class="mascot-image reveal" loading="lazy">
         <div style="flex: 1;" class="reveal">
           <span class="label">Your Adams Morgan Record Guides</span>
           <h3>We Know Our Records.</h3>
+          
           <p>We buy all kinds of records and record collections, large and small. You're welcome to walk in with small lots, we'll make you a deal on the spot. For medium-to-larger collections it's best to email us. Please include as much info as you can about the collection and photos if you have them. We pay very competitive rates so you get a fair price!</p>
-          <a href="visit.html" class="btn btn-primary" style="margin-top: 1.5rem;">Come Say Hi</a>
+          
+          <a href="visit.html" class="btn btn-primary" style="margin-top: 1rem;">Come Say Hi</a>
         </div>
       </div>
     </section>
 
-    <!-- ── Gift / Trade Cards ── -->
     <section class="section" aria-labelledby="gift-trade-heading">
       <div class="container">
         <h2 id="gift-trade-heading" class="sr-only">Gift Cards and Trade</h2>
@@ -578,18 +538,17 @@
       </div>
     </section>
 
-    <!-- ── Community ── -->
-    <section class="section section--surface" aria-labelledby="about-heading">
+    <section class="section" aria-labelledby="about-heading">
       <div class="container">
         <div class="community-inner">
           <div class="reveal">
-            <span class="label">Adams Morgan's Living Room</span>
+            <span class="label">A Neighborhood Place for Music Lovers</span>
             <h2 id="about-heading">About Us</h2>
             <p>We don't just sell records. We love to share music and make new friends! In shared space in the heart of Adams Morgan, Tiny Vinyl Shop is a gathering place for neighbors and visitors alike.</p>
             <p style="margin-top: 1.5rem;">You'll find us one block East of Columbia Rd., across from The Line Hotel — right on the D72/D74/C51 bus line.</p>
           </div>
           <div class="reveal">
-            <a href="https://instagram.com/tinyvinylshop" class="community-link-item" rel="noopener noreferrer" target="_blank">
+            <a href="https://instagram.com/tinyvinylshop" class="community-link-item" rel="noopener noreferrer" target="_blank" aria-label="Follow on Instagram (Opens in a new tab)">
               <span class="community-link-icon" aria-hidden="true">📸</span>
               <div style="flex:1">
                 <strong>Follow on Instagram</strong><br>
@@ -609,15 +568,28 @@
         </div>
       </div>
     </section>
+    
+    <section class="section section--surface" aria-labelledby="newsletter-heading">
+        <div class="container" style="text-align: center; max-width: 600px;">
+          <div class="reveal">
+            <span class="label">Stay in the Loop</span>
+            <h2 id="newsletter-heading">Join the Mailing List</h2>
+            <p style="margin-bottom: 2rem;">Get notified about new arrivals, pop-up markets, and upcoming events in the neighborhood.</p>
+            <form class="newsletter-form" style="display: flex; gap: 0.75rem; max-width: 450px; margin: 0 auto;">
+              <input type="email" class="form-input" placeholder="Your email address" required aria-label="Email address for newsletter">
+              <button type="submit" class="btn btn-primary" style="flex-shrink: 0;">Subscribe</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
   </main>
 
-  <!-- ── Floating Mobile CTA Bar ── -->
   <div class="mobile-cta-bar" role="complementary" aria-label="Quick actions">
     <a href="visit.html" class="cta-visit">Visit Us</a>
-    <a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer" class="cta-shop">Shop Discogs ↗</a>
+    <a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer" aria-label="Shop Discogs (Opens in a new tab)" class="cta-shop">Shop Discogs ↗</a>
   </div>
 
-  <!-- ── Footer ── -->
   <footer class="footer" role="contentinfo">
     <div class="container">
       <div class="footer-grid">
@@ -635,7 +607,7 @@
           <h4>Quick Links</h4>
           <ul class="footer-links" role="list">
             <li><a href="visit.html">→ Visit Us</a></li>
-            <li><a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer">→ Shop Discogs</a></li>
+            <li><a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer" aria-label="Shop Discogs (Opens in a new tab)">→ Shop Discogs</a></li>
             <li><a href="market.html">→ Popup Market</a></li>
             <li><a href="events.html">→ Events</a></li>
           </ul>
@@ -648,8 +620,55 @@
     </div>
   </footer>
 
-  <!-- Screen-reader only utility -->
-  <style>.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }</style>
+  <style>.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+/* Simple Hero Info Block */
+/* Simple Hero Info Block */
+.hero-info {
+  margin-bottom: 2rem;
+}
+
+.info-badge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-magenta);
+  margin-bottom: 0.5rem;
+}
+
+.info-details {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.info-details strong {
+  color: var(--color-magenta);
+}
+
+.info-details .dot {
+  width: 4px;
+  height: 4px;
+  background: #000;
+  border-radius: 50%;
+  opacity: 0.3;
+}
+
+/* Mobile: Hide supporting text and center the badge */
+@media (max-width: 768px) {
+  .hero-info { 
+    text-align: center; 
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Hides the "2501 Champlain / Vinyl from $0 / Open 7 Days" line */
+  .info-details { 
+    display: none; 
+  }
+}
+</style>
 
   <script>
     /* ── Hamburger / Mobile Menu ── */
@@ -663,18 +682,15 @@
       hamburger.setAttribute('aria-expanded', open);
       hamburger.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
       mobileMenu.classList.toggle('open', open);
-      // Prevent body scroll when menu is open
       document.body.style.overflow = open ? 'hidden' : '';
     }
 
     hamburger.addEventListener('click', () => toggleMenu(!menuOpen));
 
-    // Close on link click
     mobileMenu.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => toggleMenu(false));
     });
 
-    // Close on ESC
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && menuOpen) toggleMenu(false);
     });
@@ -683,7 +699,6 @@
     const record = document.getElementById('vinyl-record');
     const spinBtn = document.getElementById('spin-toggle');
 
-    // Respect prefers-reduced-motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) {
       record.classList.remove('spinning');
@@ -721,11 +736,10 @@
       }, { threshold: 0.08 });
       document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     } else {
-      // Fallback: show all
       document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
     }
 
-    /* ── Mobile CTA Bar: hide when footer is visible ── */
+    /* ── Mobile CTA Bar ── */
     const ctaBar = document.querySelector('.mobile-cta-bar');
     const footer = document.querySelector('footer');
     if (ctaBar && footer) {
