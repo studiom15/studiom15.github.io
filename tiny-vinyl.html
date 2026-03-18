@@ -149,10 +149,184 @@
     .nav-logo:hover img { transform: rotate(-8deg) scale(1.08); }
     .nav-logo-text { font-family: var(--font-heading); font-weight: 700; color: #000; font-size: clamp(1.15rem, 2.5vw, 1.5rem); }
     .nav-cta { color: var(--color-magenta) !important; font-weight: 700; }
-    .nav-hamburger span { display: block; background: #000; transition: all 0.35s var(--ease-smooth); transform-origin: center; }
-    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── Hamburger pill button (mobile only, hidden on desktop) ── */
+    .nav-hamburger {
+      display: none; /* shown via mobile media query */
+      align-items: center; gap: 0.5rem;
+      background: #000; color: #fff;
+      border: none; border-radius: 999px;
+      padding: 0.5rem 0.9rem 0.5rem 0.75rem;
+      cursor: pointer;
+      transition: background 0.25s ease, transform 0.3s var(--ease-bounce);
+    }
+    .nav-hamburger:hover { background: #222; transform: scale(1.04); }
+    .nav-hamburger:active { transform: scale(0.96); }
+    .nav-hamburger-lines {
+      display: flex; flex-direction: column; justify-content: center;
+      gap: 4px; width: 16px;
+    }
+    .nav-hamburger-lines span {
+      display: block; height: 1.5px; background: #fff; border-radius: 2px;
+      transition: width 0.3s var(--ease-bounce), transform 0.35s var(--ease-bounce), opacity 0.25s ease;
+      transform-origin: left center;
+    }
+    .nav-hamburger-lines span:nth-child(1) { width: 16px; }
+    .nav-hamburger-lines span:nth-child(2) { width: 10px; }
+    .nav-hamburger-label {
+      font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 1.5px; color: #fff;
+      transition: opacity 0.2s ease;
+    }
+    /* Open state — lines become X, label fades */
+    .nav-hamburger.open { background: #fff; border: 1.5px solid #000; }
+    .nav-hamburger.open .nav-hamburger-lines span { background: #000; }
+    .nav-hamburger.open .nav-hamburger-lines span:nth-child(1) {
+      width: 16px; transform: translateY(2.75px) rotate(45deg);
+    }
+    .nav-hamburger.open .nav-hamburger-lines span:nth-child(2) {
+      width: 16px; transform: translateY(-2.75px) rotate(-45deg);
+    }
+    .nav-hamburger.open .nav-hamburger-label { opacity: 0; width: 0; overflow: hidden; padding: 0; }
+
+    /* ── Mobile backdrop ── */
+    .mobile-backdrop {
+      display: none;
+      position: fixed; top: var(--nav-height, 64px); left: 0; right: 0; bottom: 0;
+      z-index: 98;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      opacity: 0;
+      transition: opacity 0.35s var(--ease-smooth);
+    }
+    .mobile-backdrop.open { opacity: 1; }
+
+    /* ── Mobile drawer ── */
+    .mobile-menu {
+      display: none; /* shown via mobile media query */
+      position: fixed; top: var(--nav-height, 64px); right: 0; bottom: 0;
+      width: min(340px, 88vw);
+      z-index: 101;
+      background: #0a0a0a;
+      flex-direction: column;
+      padding: 0;
+      transform: translateX(100%);
+      transition: transform 0.42s var(--ease-bounce);
+      overflow: hidden;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .mobile-menu::before {
+      /* Teal left accent line */
+      content: '';
+      position: absolute; top: 0; left: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(to bottom, var(--color-teal), transparent);
+    }
+    .mobile-menu.open { transform: translateX(0); }
+
+    /* Drawer header */
+    .mobile-menu-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 1.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .mobile-menu-eyebrow {
+      font-family: var(--font-mono); font-size: 0.65rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 2.5px; color: var(--color-teal);
+    }
+    .mobile-menu-close {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.06);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.3s var(--ease-bounce);
+    }
+    .mobile-menu-close:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.3);
+      transform: rotate(90deg);
+    }
+    .mobile-menu-close svg { width: 15px; height: 15px; }
+
+    /* Nav links */
+    .mobile-menu-nav {
+      display: flex; flex-direction: column;
+      padding: 1.5rem 1.75rem;
+      gap: 0;
+    }
+    .mobile-menu-link {
+      display: flex; align-items: baseline; gap: 0.75rem;
+      font-family: var(--font-heading); font-weight: 700;
+      font-size: clamp(1.85rem, 7vw, 2.4rem);
+      color: rgba(255,255,255,0.9); line-height: 1;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: color 0.2s ease, padding-left 0.3s var(--ease-bounce);
+    }
+    .mobile-menu-link:last-child { border-bottom: none; }
+    .mobile-menu-link:hover { color: #fff; padding-left: 0.5rem; }
+    .mobile-menu-link:active { color: var(--color-teal); }
+    .mobile-menu-num {
+      font-family: var(--font-mono); font-size: 0.62rem; font-weight: 400;
+      color: rgba(255,255,255,0.3); letter-spacing: 1px;
+      flex-shrink: 0; margin-bottom: 0.2rem;
+    }
+
+    /* Stagger links in */
+    .mobile-menu.open .mobile-menu-link:nth-child(1) { animation: drawerLink 0.45s var(--ease-bounce) 0.1s both; }
+    .mobile-menu.open .mobile-menu-link:nth-child(2) { animation: drawerLink 0.45s var(--ease-bounce) 0.16s both; }
+    .mobile-menu.open .mobile-menu-link:nth-child(3) { animation: drawerLink 0.45s var(--ease-bounce) 0.22s both; }
+    .mobile-menu.open .mobile-menu-link:nth-child(4) { animation: drawerLink 0.45s var(--ease-bounce) 0.28s both; }
+    @keyframes drawerLink {
+      from { opacity: 0; transform: translateX(20px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Discogs CTA */
+    .mobile-menu-cta {
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 1.75rem;
+      padding: 0.9rem 1.5rem;
+      background: var(--color-magenta); color: #fff;
+      border-radius: 999px;
+      font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px;
+      transition: background 0.25s ease, transform 0.3s var(--ease-bounce);
+    }
+    .mobile-menu-cta:hover { background: var(--color-magenta-dark); transform: translateY(-2px); }
+    .mobile-menu-cta:active { transform: scale(0.97); }
+
+    /* Info strip at bottom */
+    .mobile-menu-info {
+      margin: 1.25rem 1.75rem max(1.5rem, calc(var(--safe-bottom) + 1.25rem));
+      padding: 1.1rem 1.25rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+    }
+    .mobile-menu-info-label {
+      font-family: var(--font-mono); font-size: 0.6rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 2px;
+      color: var(--color-teal); display: block; margin-bottom: 0.4rem;
+    }
+    .mobile-menu-address {
+      font-size: 0.82rem; color: rgba(255,255,255,0.6);
+      line-height: 1.5; margin-bottom: 0.65rem;
+    }
+    .mobile-menu-status {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: var(--font-mono); font-size: 0.67rem; font-weight: 500;
+    }
+    .mobile-menu-status-dot {
+      width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+      animation: qcPulse 2s ease-in-out infinite;
+    }
+    .mobile-menu-status--open .mobile-menu-status-dot { background: var(--color-teal); }
+    .mobile-menu-status--open .mobile-menu-status-text { color: var(--color-teal); }
+    .mobile-menu-status--closed .mobile-menu-status-dot { background: var(--color-magenta); }
+    .mobile-menu-status--closed .mobile-menu-status-text { color: var(--color-magenta); }
 
     /* Desktop nav link hover underline */
     .nav-links a {
@@ -235,6 +409,64 @@
       font-family: var(--font-mono); font-weight: 700; color: var(--color-magenta); font-size: 0.8rem;
       transition: letter-spacing 0.3s var(--ease-smooth);
     }
+    .quick-card:hover .quick-card-link { letter-spacing: 0.06em; }
+
+    /* ── Quick Card internals ── */
+    .quick-card h3 { margin-bottom: 0.6rem; }
+    .qc-body { display: flex; flex-direction: column; gap: 0.6rem; }
+
+    .qc-address {
+      font-family: var(--font-mono); font-size: 0.75rem;
+      color: var(--color-text-muted); line-height: 1.4;
+    }
+
+    /* Hours mini-table */
+    .qc-hours { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+    .qc-hours td { padding: 0.22rem 0; vertical-align: top; }
+    .qc-hours td:first-child { color: var(--color-text-muted); font-family: var(--font-mono); padding-right: 0.6rem; white-space: nowrap; }
+    .qc-hours td:last-child { font-family: var(--font-mono); font-weight: 500; text-align: right; white-space: nowrap; }
+    .qc-hours tr.qc-today td { color: var(--color-magenta); font-weight: 700; }
+
+    /* Feature rows (bullet-style) */
+    .qc-feature-rows { display: flex; flex-direction: column; gap: 0.35rem; padding: 0; }
+    .qc-feature-rows li {
+      display: flex; align-items: center; gap: 0.45rem;
+      font-size: 0.78rem; color: var(--color-text-muted); line-height: 1.3;
+    }
+    .qc-row-glyph { color: var(--color-teal-dark); font-size: 0.65rem; flex-shrink: 0; line-height: 1; }
+    .qc-detail-line {
+      display: flex; align-items: center; gap: 0.45rem;
+      font-size: 0.74rem; color: var(--color-text-muted); font-family: var(--font-mono);
+    }
+
+    /* Event rows */
+    .qc-event-rows { display: flex; flex-direction: column; gap: 0.45rem; padding: 0; }
+    .qc-event-rows li { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; font-weight: 500; line-height: 1.3; }
+    .qc-event-icon { font-size: 0.85rem; color: var(--color-magenta); flex-shrink: 0; line-height: 1; }
+
+    /* Live badge — base */
+    .qc-live-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.28rem 0.6rem; border-radius: 999px; border: 1px solid;
+      font-family: var(--font-mono); font-size: 0.67rem; font-weight: 500;
+      width: fit-content; margin-top: 0.2rem; white-space: nowrap;
+    }
+    .qc-badge--teal { background: rgba(135,214,211,0.1); color: var(--color-teal-dark); border-color: rgba(135,214,211,0.35); }
+    .qc-badge--magenta { background: rgba(205,2,130,0.08); color: var(--color-magenta); border-color: rgba(205,2,130,0.25); }
+    .qc-badge--open { background: rgba(135,214,211,0.1); color: var(--color-teal-dark); border-color: rgba(135,214,211,0.35); }
+    .qc-badge--closed { background: rgba(205,2,130,0.08); color: var(--color-magenta); border-color: rgba(205,2,130,0.25); }
+
+    /* Pulsing dot */
+    .qc-pulse-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; animation: qcPulse 2s ease-in-out infinite; }
+    .qc-pulse-dot--teal  { background: var(--color-teal-dark); }
+    .qc-pulse-dot--magenta { background: var(--color-magenta); }
+    @keyframes qcPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.45; transform: scale(0.7); }
+    }
+
+    /* Spacer pushes CTA to bottom */
+    .qc-spacer { flex: 1; min-height: 0.5rem; }
     
     .highlight-item {
       border-left: 4px solid var(--color-teal); padding-left: 1.5rem; margin-bottom: 2rem;
@@ -289,13 +521,197 @@
     }
     .form-input:focus { outline: none; border-color: var(--color-teal); box-shadow: 0 0 0 4px rgba(135,214,211,0.2); }
 
-    /* ── Footer ── */
-    .footer { background: #000; color: #fff; }
-    .footer h4 { color: var(--color-teal); font-family: var(--font-mono); text-transform: uppercase; font-size: 0.9rem; }
-    .footer-links li { font-size: 0.9rem; }
-    .footer-links a { transition: color 0.2s ease, padding-left 0.25s var(--ease-bounce); }
-    .footer-links a:hover { color: var(--color-teal); padding-left: 4px; }
-    .footer-bottom { border-top: 1px solid #333; font-family: var(--font-mono); font-size: 0.75rem; color: #777; display: flex; justify-content: space-between; align-items: center; }
+    /* ══════════════════════════════════════════════
+       FOOTER — REDESIGNED
+    ══════════════════════════════════════════════ */
+
+    /* ── Pre-footer CTA band ── */
+    .footer-cta-band {
+      background: var(--color-teal);
+      border-top: 2px solid #000;
+      border-bottom: 2px solid #000;
+      overflow: hidden;
+      position: relative;
+    }
+    .footer-cta-band::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(
+        -45deg, transparent, transparent 18px,
+        rgba(0,0,0,0.04) 18px, rgba(0,0,0,0.04) 20px
+      );
+      pointer-events: none;
+    }
+    .footer-cta-inner {
+      max-width: min(1200px, 92vw);
+      margin: 0 auto;
+      padding: clamp(2.5rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2.5rem);
+      display: flex; align-items: center;
+      justify-content: space-between;
+      gap: 2rem; flex-wrap: wrap;
+    }
+    .footer-cta-text {
+      font-family: var(--font-heading); font-weight: 700;
+      font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+      line-height: 1.1; color: #000;
+    }
+    .footer-cta-text em {
+      font-family: var(--font-hand); font-style: normal;
+      color: var(--color-magenta); font-size: 1.18em;
+      display: inline-block; transform: rotate(-3deg); margin-left: 0.15em;
+      transition: transform 0.4s var(--ease-bounce);
+    }
+    .footer-cta-text:hover em { transform: rotate(-6deg) scale(1.08); }
+    .footer-cta-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; flex-shrink: 0; }
+    .footer-cta-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 999px; font-weight: 700; font-family: var(--font-mono);
+      font-size: clamp(0.72rem, 1.1vw, 0.82rem);
+      text-transform: uppercase; border: 2px solid #000;
+      padding: 0.85rem 1.75rem;
+      transition: transform 0.3s var(--ease-bounce), box-shadow 0.3s var(--ease-smooth), background 0.25s ease;
+      white-space: nowrap;
+    }
+    .footer-cta-btn:hover { transform: translateY(-3px) scale(1.02); }
+    .footer-cta-btn:active { transform: scale(0.97); }
+    .footer-cta-btn-primary { background: var(--color-magenta); border-color: var(--color-magenta); color: #fff; }
+    .footer-cta-btn-primary:hover { background: var(--color-magenta-dark); border-color: var(--color-magenta-dark); box-shadow: 0 10px 24px rgba(205,2,130,0.35); }
+    .footer-cta-btn-outline { background: transparent; color: #000; border-color: #000; }
+    .footer-cta-btn-outline:hover { background: #000; color: #fff; box-shadow: 0 10px 24px rgba(0,0,0,0.2); }
+
+    /* ── Main footer ── */
+    .footer { background: #0a0a0a; color: #fff; position: relative; overflow: hidden; }
+    .footer::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: repeating-radial-gradient(
+        circle at 50% 0%, transparent 0, transparent 48px,
+        rgba(255,255,255,0.015) 48px, rgba(255,255,255,0.015) 50px
+      );
+      pointer-events: none;
+    }
+    .footer-container {
+      max-width: min(1200px, 92vw); margin: 0 auto;
+      padding: clamp(4rem, 8vw, 6rem) clamp(1.25rem, 4vw, 2.5rem) 0;
+      position: relative; z-index: 1;
+    }
+    /* Top: brand + social */
+    .footer-top {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 2rem;
+      padding-bottom: clamp(2.5rem, 5vw, 4rem);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      flex-wrap: wrap;
+    }
+    .footer-brand { display: flex; flex-direction: column; gap: 1rem; max-width: 340px; }
+    .footer-logo-row { display: flex; align-items: center; gap: 0.6rem; }
+    .footer-record-icon { width: 44px; height: 44px; flex-shrink: 0; }
+    .footer-logo-wordmark { font-family: var(--font-heading); font-weight: 700; font-size: clamp(1.1rem, 2vw, 1.4rem); color: #fff; line-height: 1; }
+    .footer-logo-wordmark span { color: var(--color-magenta); }
+    .footer-tagline { font-family: var(--font-hand); font-size: clamp(1.1rem, 2vw, 1.3rem); color: var(--color-teal); line-height: 1.3; opacity: 0.9; }
+    .footer-address-mini { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.45); line-height: 1.7; }
+    /* Social pills */
+    .footer-social { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+    .social-pill {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px; padding: 0.55rem 1rem;
+      font-family: var(--font-mono); font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      color: rgba(255,255,255,0.7);
+      transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.3s var(--ease-bounce);
+      min-height: 44px;
+    }
+    .social-pill:hover { background: rgba(135,214,211,0.12); border-color: var(--color-teal); color: var(--color-teal); transform: translateY(-2px); }
+    .social-pill:active { transform: scale(0.96); }
+    .social-pill svg { width: 14px; height: 14px; flex-shrink: 0; }
+    /* Grid */
+    .footer-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: clamp(2rem, 5vw, 4rem);
+      padding: clamp(2.5rem, 5vw, 4rem) 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .footer-col-title {
+      font-family: var(--font-mono); text-transform: uppercase;
+      letter-spacing: 2px; font-size: 0.7rem; color: var(--color-teal);
+      margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .footer-col-title::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
+    /* Address */
+    .footer-addr { font-style: normal; font-size: 0.95rem; color: rgba(255,255,255,0.75); line-height: 1.9; margin-bottom: 1.25rem; }
+    .footer-addr strong { color: #fff; display: block; font-size: 1.05rem; margin-bottom: 0.2rem; }
+    .footer-map-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: var(--font-mono); font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 1px;
+      color: var(--color-teal); border-bottom: 1px solid rgba(135,214,211,0.3);
+      padding-bottom: 2px;
+      transition: border-color 0.25s ease, gap 0.3s var(--ease-bounce);
+    }
+    .footer-map-link:hover { border-color: var(--color-teal); gap: 0.7rem; }
+    .footer-map-link svg { width: 12px; height: 12px; flex-shrink: 0; }
+    /* Hours */
+    .footer-hours-table { width: 100%; font-size: 0.88rem; border-collapse: collapse; }
+    .footer-hours-table tr { border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .footer-hours-table tr:last-child { border-bottom: none; }
+    .footer-hours-table td { padding: 0.55rem 0; color: rgba(255,255,255,0.6); vertical-align: middle; }
+    .footer-hours-table td:first-child { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.4); width: 5.5rem; }
+    .footer-hours-table td:last-child { font-weight: 500; color: rgba(255,255,255,0.8); text-align: right; }
+    .hours-open-badge {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      background: rgba(135,214,211,0.12); color: var(--color-teal);
+      font-family: var(--font-mono); font-size: 0.65rem;
+      text-transform: uppercase; letter-spacing: 1px;
+      padding: 0.2rem 0.6rem; border-radius: 999px;
+      border: 1px solid rgba(135,214,211,0.25); margin-bottom: 1rem;
+    }
+    .hours-open-badge::before {
+      content: ''; width: 6px; height: 6px;
+      background: var(--color-teal); border-radius: 50%;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+    /* Nav links */
+    .footer-links-list { display: flex; flex-direction: column; gap: 0; }
+    .footer-link-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.9rem; color: rgba(255,255,255,0.65);
+      transition: color 0.25s ease, padding-left 0.3s var(--ease-bounce);
+      min-height: 44px;
+    }
+    .footer-link-item:last-child { border-bottom: none; }
+    .footer-link-item:hover { color: #fff; padding-left: 6px; }
+    .footer-link-item:hover .link-arrow { transform: translateX(4px); color: var(--color-teal); }
+    .link-arrow { color: rgba(255,255,255,0.25); font-family: var(--font-mono); font-size: 0.75rem; transition: transform 0.3s var(--ease-bounce), color 0.25s ease; flex-shrink: 0; }
+    .footer-link-item.external .link-arrow::after { content: ' ↗'; }
+    .footer-link-item:not(.external) .link-arrow::after { content: ' →'; }
+    /* Bottom bar */
+    .footer-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap;
+      padding: clamp(1.25rem, 3vw, 2rem) 0;
+      padding-bottom: max(clamp(1.25rem, 3vw, 2rem), var(--safe-bottom));
+    }
+    .footer-copyright { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.3); }
+    .footer-copyright a { color: rgba(255,255,255,0.3); border-bottom: 1px solid transparent; transition: color 0.2s ease, border-color 0.2s ease; }
+    .footer-copyright a:hover { color: rgba(255,255,255,0.6); border-bottom-color: rgba(255,255,255,0.3); }
+    .footer-made-with { font-family: var(--font-hand); font-size: 1rem; color: rgba(255,255,255,0.25); display: flex; align-items: center; gap: 0.3rem; transition: color 0.3s ease; }
+    .footer-made-with:hover { color: var(--color-magenta); }
+    .footer-made-with .heart { display: inline-block; transition: transform 0.3s var(--ease-bounce); }
+    .footer-made-with:hover .heart { transform: scale(1.3); }
+    .footer-back-to-top {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: var(--font-mono); font-size: 0.68rem;
+      text-transform: uppercase; letter-spacing: 1px;
+      color: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px; padding: 0.45rem 0.9rem;
+      transition: color 0.25s ease, border-color 0.25s ease, transform 0.3s var(--ease-bounce), background 0.25s ease;
+    }
+    .footer-back-to-top:hover { color: var(--color-teal); border-color: var(--color-teal); background: rgba(135,214,211,0.08); transform: translateY(-3px); }
+    .footer-back-to-top svg { width: 12px; height: 12px; transition: transform 0.3s var(--ease-bounce); }
+    .footer-back-to-top:hover svg { transform: translateY(-2px); }
 
     /* ── Scroll Reveal animations (staggered) ── */
     .reveal {
@@ -343,6 +759,7 @@
       .nav-links a { color: #000; }
       .nav-hamburger { display: none; }
       .mobile-menu { display: none !important; }
+      .mobile-backdrop { display: none !important; }
 
       /* Reduced hero height for better fold visibility */
       .hero { background-color: var(--color-teal); padding: clamp(7rem, 12vh, 10rem) 0 clamp(4rem, 8vh, 7rem); border-bottom: 2px solid #000; display: flex; align-items: center; min-height: 80vh; }
@@ -357,10 +774,19 @@
       .ticker { padding: 1.2rem 0; font-size: 0.85rem; }
       .ticker-item { padding: 0 2rem; }
 
-      .quick-card { padding: clamp(1.75rem, 3vw, 2.75rem); }
-      .quick-card h3 { margin-bottom: 1rem; }
-      .quick-card p { flex: 1; }
-      .quick-card-link { margin-top: 1.5rem; }
+      .quick-card { padding: clamp(1.25rem, 2vw, 1.75rem); }
+      .quick-card h3 { font-size: clamp(1.05rem, 1.8vw, 1.35rem); margin-bottom: 0.5rem; }
+      .quick-card .label { font-size: 0.7rem; margin-bottom: 0.35rem; }
+      .qc-body { gap: 0.5rem; }
+      .qc-address { font-size: 0.72rem; }
+      .qc-hours { font-size: 0.7rem; }
+      .qc-hours td { padding: 0.18rem 0; }
+      .qc-hours td:first-child { padding-right: 0.4rem; }
+      .qc-feature-rows li { font-size: 0.72rem; }
+      .qc-detail-line { font-size: 0.68rem; }
+      .qc-event-rows li { font-size: 0.74rem; }
+      .qc-live-badge { font-size: 0.62rem; padding: 0.22rem 0.5rem; }
+      .quick-card-link { margin-top: 1rem; font-size: 0.75rem; }
       .highlight-price { font-size: clamp(1.3rem, 2vw, 1.6rem); }
 
       .mascot-strip { padding: var(--section-padding) 0; }
@@ -371,11 +797,12 @@
       .community-inner { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap-lg); align-items: center; }
       .community-link-item { gap: 1.5rem; padding: 1.5rem; min-height: 70px; }
 
-      .footer { padding: clamp(4rem, 8vh, 7rem) 0 clamp(2rem, 4vh, 3.5rem); }
-      .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap-lg); margin-bottom: 3rem; }
-      .footer h4 { margin-bottom: 1.25rem; }
-      .footer-links li { margin-bottom: 0.75rem; }
-      .footer-bottom { padding-top: 2rem; flex-direction: row; }
+      /* Footer desktop overrides */
+      .footer-cta-actions .footer-cta-btn { min-width: 160px; }
+      .footer-grid { grid-template-columns: repeat(3,1fr); }
+      .footer-accordion-trigger { display: none; }
+      .footer-accordion-content { max-height: none !important; overflow: visible !important; padding-bottom: 0 !important; }
+      .footer-col-title { display: flex; }
       .mobile-cta-bar { display: none !important; }
     }
 
@@ -406,8 +833,6 @@
       
       /* Optimized 2x2 mobile grid */
       .grid-4 { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.75rem, 3vw, 1rem); }
-      .grid-4 .quick-card h3 { font-size: 1.05rem; }
-      .grid-4 .quick-card p { font-size: 0.85rem; }
       
       .grid-2 { display: grid; grid-template-columns: 1fr; gap: var(--gap-md); }
 
@@ -418,39 +843,13 @@
 
       .nav { padding: 1rem 0; padding-top: max(1rem, var(--safe-top)); }
       .nav-links { display: none; }
-      .nav-hamburger { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; width: 48px; height: 48px; }
-      .nav-hamburger span { width: 22px; height: 2px; }
 
-      .mobile-menu {
-        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-        background: var(--color-teal);
-        z-index: 99; flex-direction: column; align-items: center; justify-content: center;
-        gap: 1.25rem; padding: 2rem 2rem max(2rem, var(--safe-bottom));
-        padding-top: max(5rem, calc(var(--safe-top) + 5rem));
-        opacity: 0; pointer-events: none; transition: opacity 0.35s var(--ease-smooth); display: flex;
-      }
-      .mobile-menu:not(.open) { pointer-events: none; opacity: 0; visibility: hidden; }
-      .mobile-menu.open { opacity: 1; pointer-events: all; visibility: visible; }
-      .mobile-menu a {
-        font-family: var(--font-heading); font-size: clamp(2rem, 8vw, 2.7rem); font-weight: 700; color: #000;
-        border-bottom: 3px solid transparent; padding-bottom: 0.25rem;
-        transition: border-color 0.2s ease, transform 0.25s var(--ease-bounce);
-        min-height: 52px; display: flex; align-items: center;
-      }
-      .mobile-menu a:hover { border-bottom-color: #000; transform: translateX(6px); }
-      .mobile-menu a:active { border-bottom-color: #000; }
-      .mobile-menu .mobile-cta { color: var(--color-magenta); margin-top: 0.5rem; }
+      /* Show hamburger pill on mobile */
+      .nav-hamburger { display: flex; }
 
-      /* Stagger mobile menu links in */
-      .mobile-menu.open a:nth-child(1) { animation: menuItem 0.4s var(--ease-bounce) 0.05s both; }
-      .mobile-menu.open a:nth-child(2) { animation: menuItem 0.4s var(--ease-bounce) 0.12s both; }
-      .mobile-menu.open a:nth-child(3) { animation: menuItem 0.4s var(--ease-bounce) 0.19s both; }
-      .mobile-menu.open a:nth-child(4) { animation: menuItem 0.4s var(--ease-bounce) 0.26s both; }
-      .mobile-menu.open a:nth-child(5) { animation: menuItem 0.4s var(--ease-bounce) 0.33s both; }
-      @keyframes menuItem {
-        from { opacity: 0; transform: translateX(-20px); }
-        to   { opacity: 1; transform: translateX(0); }
-      }
+      /* Show backdrop and drawer on mobile */
+      .mobile-backdrop { display: block; }
+      .mobile-menu { display: flex; }
 
       /* Reduced hero for mobile */
       .hero {
@@ -472,9 +871,17 @@
       .ticker { padding: 0.9rem 0; font-size: 0.78rem; }
       .ticker-item { padding: 0 1.5rem; }
 
-      .quick-card { padding: clamp(1.25rem, 4vw, 1.75rem); }
-      .quick-card h3 { margin-bottom: 0.6rem; }
-      .quick-card-link { margin-top: 1.25rem; }
+      .quick-card { padding: clamp(1rem, 4vw, 1.5rem); }
+      .quick-card h3 { margin-bottom: 0.4rem; font-size: 1rem; }
+      .quick-card .label { font-size: 0.68rem; margin-bottom: 0.25rem; }
+      .qc-body { gap: 0.45rem; }
+      .grid-4 .qc-hours { font-size: 0.67rem; }
+      .grid-4 .qc-hours td { padding: 0.15rem 0; }
+      .grid-4 .qc-feature-rows li,
+      .grid-4 .qc-event-rows li { font-size: 0.7rem; }
+      .grid-4 .qc-detail-line { font-size: 0.65rem; }
+      .grid-4 .qc-live-badge { font-size: 0.6rem; padding: 0.2rem 0.45rem; }
+      .quick-card-link { margin-top: 1rem; font-size: 0.72rem; }
       .highlight-price { font-size: 1.3rem; }
 
       .mascot-strip { padding: 3rem 0; }
@@ -486,14 +893,31 @@
       .community-link-item { gap: 1rem; padding: 1.25rem; min-height: 68px; }
       .community-link-item:active { background: var(--bg-surface); }
 
-      .footer { padding: 3rem 0 1.5rem; padding-bottom: max(1.5rem, var(--safe-bottom)); }
-      .footer-grid { display: flex; flex-direction: column; gap: 2rem; margin-bottom: 2rem; }
-      .footer-grid > div:first-child { display: none; }
-      .footer h4 { margin-bottom: 0.75rem; font-size: 0.8rem; }
-      .footer-links { display: flex; flex-wrap: wrap; gap: 0; }
-      .footer-links li { width: 50%; margin-bottom: 0; }
-      .footer-links a { display: flex; align-items: center; min-height: 44px; font-size: 0.88rem; padding-right: 0.5rem; }
-      .footer-bottom { padding-top: 1.5rem; flex-direction: column; text-align: center; gap: 0.4rem; }
+      /* Footer mobile overrides */
+      .footer-cta-inner { flex-direction: column; align-items: flex-start; gap: 1.5rem; padding: 2.5rem clamp(1.25rem,5vw,2rem); }
+      .footer-cta-actions { width: 100%; flex-direction: column; }
+      .footer-cta-actions .footer-cta-btn { width: 100%; justify-content: center; min-height: 52px; font-size: 0.85rem; }
+      .footer-top { flex-direction: column; gap: 1.75rem; }
+      .footer-brand { max-width: 100%; }
+      .footer-grid { grid-template-columns: 1fr; gap: 0; padding: 0; border-bottom: none; }
+      .footer-accordion-item { border-top: 1px solid rgba(255,255,255,0.08); }
+      .footer-accordion-item:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .footer-accordion-trigger {
+        display: flex; align-items: center; justify-content: space-between;
+        width: 100%; padding: 1.1rem 0; background: none;
+        color: var(--color-teal); font-family: var(--font-mono);
+        font-size: 0.72rem; text-transform: uppercase; letter-spacing: 2px;
+        min-height: 52px; cursor: pointer;
+      }
+      .footer-accordion-trigger .acc-chevron { color: rgba(255,255,255,0.3); font-size: 0.9rem; transition: transform 0.3s var(--ease-bounce); flex-shrink: 0; }
+      .footer-accordion-trigger[aria-expanded="true"] .acc-chevron { transform: rotate(180deg); }
+      .footer-accordion-content { overflow: hidden; max-height: 0; transition: max-height 0.4s var(--ease-smooth), padding 0.4s var(--ease-smooth); }
+      .footer-accordion-content.open { max-height: 400px; padding-bottom: 1.25rem; }
+      .footer-col-title { display: none; }
+      .footer-bottom { flex-direction: column-reverse; align-items: center; text-align: center; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 1.5rem; }
+      .footer-made-with { display: none; }
+      .footer-link-item { min-height: 50px; }
+      .social-pill { padding: 0.7rem 1.1rem; }
 
       .mobile-cta-bar {
         display: flex; position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
@@ -519,17 +943,65 @@
     @media (min-width: 769px) and (max-width: 1024px) {
       .grid-4 { grid-template-columns: repeat(2, 1fr); }
       .hero .container { gap: 2.5rem; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .footer-accordion-trigger { display: none; }
+      .footer-accordion-content { max-height: none !important; overflow: visible !important; }
+      .footer-col-title { display: flex; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Mobile menu backdrop -->
+  <div class="mobile-backdrop" id="mobile-backdrop" aria-hidden="true"></div>
+
+  <!-- Mobile drawer -->
   <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation menu">
-    <a href="visit.html">Visit Us</a>
-    <a href="market.html">Market</a>
-    <a href="events.html">Events</a>
-    <a href="about.html">About</a>
-    <a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer" aria-label="Shop Discogs (Opens in a new tab)" class="mobile-cta">Shop Discogs ↗</a>
+    <!-- Drawer header -->
+    <div class="mobile-menu-header">
+      <span class="mobile-menu-eyebrow">Menu</span>
+      <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Close navigation menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Nav links -->
+    <nav class="mobile-menu-nav" aria-label="Mobile navigation">
+      <a href="visit.html" class="mobile-menu-link">
+        <span class="mobile-menu-num">01</span>Visit Us
+      </a>
+      <a href="market.html" class="mobile-menu-link">
+        <span class="mobile-menu-num">02</span>Market
+      </a>
+      <a href="events.html" class="mobile-menu-link">
+        <span class="mobile-menu-num">03</span>Events
+      </a>
+      <a href="about.html" class="mobile-menu-link">
+        <span class="mobile-menu-num">04</span>About
+      </a>
+    </nav>
+
+    <!-- Spacer -->
+    <div style="flex:1"></div>
+
+    <!-- Shop CTA -->
+    <a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer"
+       aria-label="Shop Discogs (Opens in a new tab)" class="mobile-menu-cta">
+      Shop Discogs ↗
+    </a>
+
+    <!-- Info strip -->
+    <div class="mobile-menu-info">
+      <span class="mobile-menu-info-label">Find Us</span>
+      <p class="mobile-menu-address">2501 Champlain St NW<br>Adams Morgan, DC</p>
+      <div id="mobile-open-badge" class="mobile-menu-status">
+        <span class="mobile-menu-status-dot" aria-hidden="true"></span>
+        <span class="mobile-menu-status-text">Checking hours…</span>
+      </div>
+    </div>
   </div>
 
   <nav class="nav" id="main-nav" role="navigation" aria-label="Main navigation">
@@ -546,9 +1018,11 @@
         <li><a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer" aria-label="Shop Discogs (Opens in a new tab)" class="nav-cta">Shop Discogs ↗</a></li>
       </ul>
       <button class="nav-hamburger" id="nav-hamburger" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-menu">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
+        <span class="nav-hamburger-lines" aria-hidden="true">
+          <span></span>
+          <span></span>
+        </span>
+        <span class="nav-hamburger-label">Menu</span>
       </button>
     </div>
   </nav>
@@ -585,8 +1059,8 @@
 
     <div class="ticker" aria-label="Store highlights" aria-live="off">
       <div class="ticker-track" aria-hidden="true">
-        <span class="ticker-item">Vinyl from $0 • Jazz Sundays • Adams Morgan, DC • Open 7 Days • CDs 4 for $10 • We Buy &amp; Trade • Record Store Day • Popup Market Every Weekend •</span>
-        <span class="ticker-item">Vinyl from $0 • Jazz Sundays • Adams Morgan, DC • Open 7 Days • CDs 4 for $10 • We Buy &amp; Trade • Record Store Day • Popup Market Every Weekend •</span>
+        <span class="ticker-item">Vinyl from $0 • Jazz Sundays • Adams Morgan, DC • Open 7 Days • CDs 4 for $10 • We Buy &amp; Trade • Record Store Day • Vintage Market Every Weekend •</span>
+        <span class="ticker-item">Vinyl from $0 • Jazz Sundays • Adams Morgan, DC • Open 7 Days • CDs 4 for $10 • We Buy &amp; Trade • Record Store Day • Vintage Market Every Weekend •</span>
       </div>
     </div>
 
@@ -596,27 +1070,88 @@
           <span class="label">Find What You Need</span>
           <h2 id="find-heading">Everything in One Place</h2>
         </div>
-        <div class="grid-4">
+        <div class="grid-4" style="align-items: stretch;">
+
+          <!-- Card 1: Visit Us -->
           <a href="visit.html" class="quick-card reveal">
+            <span class="label">In-Store</span>
             <h3>Visit Us</h3>
-            <p>2501 Champlain St NW. Mon-Thu 4-7pm, Fri-Sat Noon-8pm, Sun Noon-6pm.</p>
+            <div class="qc-body">
+              <p class="qc-address">2501 Champlain St NW, Washington DC</p>
+              <table class="qc-hours" aria-label="Store hours">
+                <tbody>
+                  <tr data-days="1-4"><td>Mon – Thu</td><td>4:00 – 7:00 PM</td></tr>
+                  <tr data-days="5-6"><td>Fri – Sat</td><td>12:00 – 8:00 PM</td></tr>
+                  <tr data-days="0"><td>Sunday</td><td>12:00 – 6:00 PM</td></tr>
+                </tbody>
+              </table>
+              <div id="qc-open-badge" class="qc-live-badge" aria-live="polite">
+                <span class="qc-pulse-dot" aria-hidden="true"></span>
+                <span class="qc-badge-text">Checking…</span>
+              </div>
+            </div>
+            <span class="qc-spacer"></span>
             <span class="quick-card-link">Directions →</span>
           </a>
-          <a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer" aria-label="Shop Online (Opens in a new tab)" class="quick-card reveal">
+
+          <!-- Card 2: Shop Online -->
+          <a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer" aria-label="Shop Online on Discogs (Opens in a new tab)" class="quick-card reveal">
+            <span class="label">Online</span>
             <h3>Shop Online</h3>
-            <p>Browse our full selection on Discogs. Local pickup available.</p>
+            <div class="qc-body">
+              <ul class="qc-feature-rows" aria-label="Online shop features">
+                <li><span class="qc-row-glyph" aria-hidden="true">◉</span>Full Discogs catalogue</li>
+                <li><span class="qc-row-glyph" aria-hidden="true">◎</span>Local pickup available</li>
+              </ul>
+              <p class="qc-detail-line">
+                <span class="qc-row-glyph" aria-hidden="true">↻</span>New arrivals weekly
+              </p>
+              <div class="qc-live-badge qc-badge--teal" aria-label="Shop always available online">
+                <span class="qc-pulse-dot qc-pulse-dot--teal" aria-hidden="true"></span>
+                <span class="qc-badge-text">Always Open Online</span>
+              </div>
+            </div>
+            <span class="qc-spacer"></span>
             <span class="quick-card-link">Open Discogs →</span>
           </a>
+
+          <!-- Card 3: Popup Market -->
           <a href="market.html" class="quick-card reveal">
-            <h3>Popup Market</h3>
-            <p>Every weekend outside the shop. ~7 rotating vintage vendors.</p>
-            <span class="quick-card-link">Learn more →</span>
+            <span class="label">Weekend</span>
+            <h3>Vintage Market</h3>
+            <div class="qc-body">
+              <ul class="qc-feature-rows" aria-label="Market details">
+                <li><span class="qc-row-glyph" aria-hidden="true">◈</span>Every Sat &amp; Sun outside the shop</li>
+                <li><span class="qc-row-glyph" aria-hidden="true">◈</span>~7 rotating vintage vendors</li>
+              </ul>
+              <div id="qc-market-badge" class="qc-live-badge qc-badge--teal" aria-live="polite">
+                <span class="qc-pulse-dot qc-pulse-dot--teal" aria-hidden="true"></span>
+                <span class="qc-badge-text">Next: calculating…</span>
+              </div>
+            </div>
+            <span class="qc-spacer"></span>
+            <span class="quick-card-link">Learn More →</span>
           </a>
+
+          <!-- Card 4: Events -->
           <a href="events.html" class="quick-card reveal">
+            <span class="label">Upcoming</span>
             <h3>Events</h3>
-            <p>Jazz Sundays, Record Store Day, live music, and more.</p>
-            <span class="quick-card-link">See events →</span>
+            <div class="qc-body">
+              <ul class="qc-event-rows" aria-label="Event types">
+                <li><span class="qc-event-icon" aria-hidden="true">♪</span>Jazz Sundays</li>
+                <li><span class="qc-event-icon" aria-hidden="true">◎</span>Record Store Day</li>
+                <li><span class="qc-event-icon" aria-hidden="true">♬</span>Live Music</li>
+              </ul>
+              <div class="qc-live-badge qc-badge--magenta" aria-label="Check full calendar">
+                <span class="qc-pulse-dot qc-pulse-dot--magenta" aria-hidden="true"></span>
+                <span class="qc-badge-text">Events year-round</span>
+              </div>
+            </div>
+            <span class="qc-spacer"></span>
+            <span class="quick-card-link">See Full Calendar →</span>
           </a>
+
         </div>
       </div>
     </section>
@@ -736,33 +1271,173 @@
     <a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer" aria-label="Shop Discogs (Opens in a new tab)" class="cta-shop">Shop Discogs ↗</a>
   </div>
 
-  <footer class="footer" role="contentinfo">
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <img src="assets/updated-logo.png" alt="Tiny Vinyl Shop" style="height: 60px; filter: brightness(0) invert(1);" loading="lazy">
-          <p style="color: #777; margin-top: 1rem;">A neighborhood place for music lovers.<br>In the heart of Adams Morgan since 2024.</p>
-        </div>
-        <div class="footer-col">
-          <h4>Visit</h4>
-          <address style="font-style: normal; color: #777; font-size: 0.9rem; line-height: 1.8;">
-            2501 Champlain Street NW<br>Washington, DC
+  <!-- ══════════════════════════════════════════════
+       PRE-FOOTER CTA BAND
+  ════════════════════════════════════════════════ -->
+  <!-- <div class="footer-cta-band" role="complementary" aria-label="Visit the shop">
+    <div class="footer-cta-inner">
+      <div class="footer-cta-text">
+        Come say <em>hi.</em><br>We're open every day.
+      </div>
+      <div class="footer-cta-actions">
+        <a href="visit.html" class="footer-cta-btn footer-cta-btn-primary" aria-label="Get directions to Tiny Vinyl Shop">
+          Get Directions
+        </a>
+        <a href="https://www.discogs.com/seller/TinyVinylShop/profile"
+           class="footer-cta-btn footer-cta-btn-outline"
+           target="_blank"
+           rel="noopener noreferrer"
+           aria-label="Shop online on Discogs (opens in a new tab)">
+          Shop Discogs ↗
+        </a>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- ══════════════════════════════════════════════
+       MAIN FOOTER
+  ════════════════════════════════════════════════ -->
+  <footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="footer-container">
+
+      <!-- TOP: Brand + Social -->
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo-row">
+            <!-- <svg class="footer-record-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="22" cy="22" r="21" fill="#111" stroke="#333" stroke-width="1.5"/>
+              <circle cx="22" cy="22" r="15" fill="none" stroke="#222" stroke-width="1"/>
+              <circle cx="22" cy="22" r="10" fill="none" stroke="#222" stroke-width="1"/>
+              <circle cx="22" cy="22" r="5.5" fill="white"/>
+              <circle cx="22" cy="22" r="2" fill="#87D6D3"/>
+            </svg> -->
+            <span class="footer-logo-wordmark">TINY<span> VINYL</span> SHOP</span>
+          </div>
+          <!-- <p class="footer-tagline">"A neighborhood place for music lovers."</p> -->
+          <address class="footer-address-mini" style="font-style:normal;">
+            2501 Champlain Street NW<br>
+            Washington, DC · Adams Morgan
           </address>
         </div>
-        <div class="footer-col">
-          <h4>Quick Links</h4>
-          <ul class="footer-links" role="list">
-            <li><a href="visit.html">→ Visit Us</a></li>
-            <li><a href="https://www.discogs.com/seller/TinyVinylShop/profile" target="_blank" rel="noopener noreferrer" aria-label="Shop Discogs (Opens in a new tab)">→ Shop Discogs</a></li>
-            <li><a href="market.html">→ Popup Market</a></li>
-            <li><a href="events.html">→ Events</a></li>
-          </ul>
+
+        <nav class="footer-social" aria-label="Social media and contact links">
+          <a href="https://instagram.com/tinyvinylshop"
+             class="social-pill"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="Follow Tiny Vinyl Shop on Instagram (opens in a new tab)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+            </svg>
+            @tinyvinylshop
+          </a>
+          <a href="contact.html" class="social-pill" aria-label="Contact Tiny Vinyl Shop">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            Say Hello
+          </a>
+          <a href="market.html" class="social-pill" aria-label="Weekend vintage market">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            </svg>
+            Tiny Vintage Market
+          </a>
+        </nav>
+      </div>
+
+      <!-- MIDDLE: 3-column info grid -->
+      <div class="footer-grid">
+
+        <!-- Column 1: Visit -->
+        <div class="footer-accordion-item">
+          <button class="footer-accordion-trigger"
+                  aria-expanded="true"
+                  aria-controls="footer-acc-visit"
+                  id="footer-acc-visit-btn">
+            Visit Us
+            <span class="acc-chevron" aria-hidden="true">▾</span>
+          </button>
+          <div class="footer-col-title" aria-hidden="true">Visit Us</div>
+          <div class="footer-accordion-content open" id="footer-acc-visit" role="region" aria-labelledby="footer-acc-visit-btn">
+            <address class="footer-addr">
+              <strong>2501 Champlain Street NW</strong>
+              Washington, DC 20009<br>Adams Morgan
+            </address>
+            <a href="visit.html" class="footer-map-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              View on Map
+            </a>
+          </div>
+        </div>
+
+        <!-- Column 2: Hours -->
+        <div class="footer-accordion-item">
+          <button class="footer-accordion-trigger"
+                  aria-expanded="false"
+                  aria-controls="footer-acc-hours"
+                  id="footer-acc-hours-btn">
+            Hours
+            <span class="acc-chevron" aria-hidden="true">▾</span>
+          </button>
+          <div class="footer-col-title" aria-hidden="true">Hours</div>
+          <div class="footer-accordion-content" id="footer-acc-hours" role="region" aria-labelledby="footer-acc-hours-btn">
+            <div id="footer-open-status" class="hours-open-badge" aria-live="polite">Open Now</div>
+            <table class="footer-hours-table" aria-label="Store hours">
+              <tbody>
+                <tr><td>Mon–Thu</td><td></td><td>4:00 – 7:00 PM</td></tr>
+                <tr><td>Friday</td><td></td><td>12:00 – 8:00 PM</td></tr>
+                <tr><td>Saturday</td><td></td><td>12:00 – 8:00 PM</td></tr>
+                <tr><td>Sunday</td><td></td><td>12:00 – 6:00 PM</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Column 3: Quick Links -->
+        <div class="footer-accordion-item">
+          <button class="footer-accordion-trigger"
+                  aria-expanded="false"
+                  aria-controls="footer-acc-links"
+                  id="footer-acc-links-btn">
+            Quick Links
+            <span class="acc-chevron" aria-hidden="true">▾</span>
+          </button>
+          <div class="footer-col-title" aria-hidden="true">Quick Links</div>
+          <div class="footer-accordion-content" id="footer-acc-links" role="region" aria-labelledby="footer-acc-links-btn">
+            <nav aria-label="Footer navigation">
+              <ul class="footer-links-list">
+                <li><a href="visit.html" class="footer-link-item">Visit Us<span class="link-arrow" aria-hidden="true"></span></a></li>
+                <li><a href="https://www.discogs.com/seller/TinyVinylShop/profile" class="footer-link-item external" target="_blank" rel="noopener noreferrer" aria-label="Shop on Discogs (opens in a new tab)">Shop Discogs<span class="link-arrow" aria-hidden="true"></span></a></li>
+                <li><a href="market.html" class="footer-link-item">Vintage Market<span class="link-arrow" aria-hidden="true"></span></a></li>
+                <li><a href="events.html" class="footer-link-item">Events<span class="link-arrow" aria-hidden="true"></span></a></li>
+                <li><a href="contact.html" class="footer-link-item">Contact<span class="link-arrow" aria-hidden="true"></span></a></li>
+                <li><a href="about.html" class="footer-link-item">About<span class="link-arrow" aria-hidden="true"></span></a></li>
+              </ul>
+            </nav>
+          </div>
         </div>
       </div>
+
+      <!-- BOTTOM BAR -->
       <div class="footer-bottom">
-        <span>© 2026 Tiny Vinyl Shop · Washington DC</span>
-        <span style="color: var(--color-magenta)">COME SAY HI</span>
+        <span class="footer-copyright">
+          © 2026 Tiny Vinyl Shop · Washington DC ·
+        </span>
+        <span class="footer-made-with" aria-label="Made with love in Adams Morgan">
+          Made with <span class="heart" aria-hidden="true">♥</span> by Madeline Demers
+        </span>
+        <a href="#top" class="footer-back-to-top" aria-label="Back to top of page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <line x1="12" y1="19" x2="12" y2="5"/>
+            <polyline points="5 12 12 5 19 12"/>
+          </svg>
+          Back to top
+        </a>
       </div>
+
     </div>
   </footer>
 
@@ -788,10 +1463,20 @@
 </style>
 
   <script>
-    /* ── Hamburger / Mobile Menu ── */
-    const hamburger = document.getElementById('nav-hamburger');
+    /* ── Hamburger / Mobile Drawer ── */
+    const hamburger  = document.getElementById('nav-hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
+    const backdrop   = document.getElementById('mobile-backdrop');
+    const closeBtn   = document.getElementById('mobile-menu-close');
     let menuOpen = false;
+
+    /* Measure nav height and set CSS variable so drawer starts below it */
+    function setNavHeight() {
+      const nav = document.getElementById('main-nav');
+      document.documentElement.style.setProperty('--nav-height', nav.offsetHeight + 'px');
+    }
+    setNavHeight();
+    window.addEventListener('resize', setNavHeight, { passive: true });
 
     function toggleMenu(open) {
       menuOpen = open;
@@ -799,18 +1484,38 @@
       hamburger.setAttribute('aria-expanded', open);
       hamburger.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
       mobileMenu.classList.toggle('open', open);
+      backdrop.classList.toggle('open', open);
       document.body.style.overflow = open ? 'hidden' : '';
+      if (open) {
+        // Move focus to close button
+        requestAnimationFrame(() => closeBtn.focus());
+      }
     }
 
     hamburger.addEventListener('click', () => toggleMenu(!menuOpen));
+    closeBtn.addEventListener('click', () => toggleMenu(false));
+    backdrop.addEventListener('click', () => toggleMenu(false));
 
-    mobileMenu.querySelectorAll('a').forEach(link => {
+    mobileMenu.querySelectorAll('.mobile-menu-link, .mobile-menu-cta').forEach(link => {
       link.addEventListener('click', () => toggleMenu(false));
     });
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && menuOpen) toggleMenu(false);
     });
+
+    /* Populate open/closed status inside drawer */
+    (function() {
+      const badge = document.getElementById('mobile-open-badge');
+      if (!badge) return;
+      const et  = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+      const day = et.getDay(), t = et.getHours() + et.getMinutes() / 60;
+      const open = (day >= 1 && day <= 4) ? (t >= 16 && t < 19)
+                 : (day === 5 || day === 6) ? (t >= 12 && t < 20)
+                 : (day === 0)              ? (t >= 12 && t < 18) : false;
+      badge.classList.add(open ? 'mobile-menu-status--open' : 'mobile-menu-status--closed');
+      badge.querySelector('.mobile-menu-status-text').textContent = open ? 'Open Now' : 'Currently Closed';
+    })();
 
     /* ── Scroll Nav ── */
     const nav = document.getElementById('main-nav');
@@ -819,6 +1524,7 @@
       if (!ticking) {
         requestAnimationFrame(() => {
           nav.classList.toggle('scrolled', window.scrollY > 40);
+          setNavHeight();
           ticking = false;
         });
         ticking = true;
@@ -850,6 +1556,93 @@
       }, { threshold: 0.1 });
       footerObserver.observe(footer);
     }
+  </script>
+  <script>
+    /* ── Footer: Mobile accordion ── */
+    document.querySelectorAll('.footer-accordion-trigger').forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const expanded = trigger.getAttribute('aria-expanded') === 'true';
+        const content = document.getElementById(trigger.getAttribute('aria-controls'));
+        trigger.setAttribute('aria-expanded', !expanded);
+        content.classList.toggle('open', !expanded);
+      });
+    });
+
+    /* ── Footer: Dynamic open/closed badge (Eastern Time) ── */
+    (function() {
+      const badge = document.getElementById('footer-open-status');
+      if (!badge) return;
+      const et = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+      const day = et.getDay(), t = et.getHours() + et.getMinutes() / 60;
+      const open = (day >= 1 && day <= 4) ? (t >= 16 && t < 19)
+                 : (day === 5 || day === 6) ? (t >= 12 && t < 20)
+                 : (day === 0)              ? (t >= 12 && t < 18) : false;
+      badge.textContent = open ? 'Open Now' : 'Currently Closed';
+      badge.style.cssText += open
+        ? 'background:rgba(135,214,211,.12);color:var(--color-teal);border-color:rgba(135,214,211,.25)'
+        : 'background:rgba(205,2,130,.12);color:var(--color-magenta);border-color:rgba(205,2,130,.25)';
+    })();
+
+    /* ── Quick Cards: dynamic badges ── */
+    (function() {
+      const et = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+      const day = et.getDay(); // 0=Sun,1=Mon…6=Sat
+      const t   = et.getHours() + et.getMinutes() / 60;
+
+      /* 1 — Open / Closed badge */
+      const openBadge = document.getElementById('qc-open-badge');
+      if (openBadge) {
+        const isOpen = (day >= 1 && day <= 4) ? (t >= 16 && t < 19)
+                     : (day === 5 || day === 6) ? (t >= 12 && t < 20)
+                     : (day === 0)              ? (t >= 12 && t < 18) : false;
+        const dot  = openBadge.querySelector('.qc-pulse-dot');
+        const text = openBadge.querySelector('.qc-badge-text');
+        text.textContent = isOpen ? 'Open Now' : 'Currently Closed';
+        if (isOpen) {
+          openBadge.classList.add('qc-badge--open');
+          dot.classList.add('qc-pulse-dot--teal');
+        } else {
+          openBadge.classList.add('qc-badge--closed');
+          dot.classList.add('qc-pulse-dot--magenta');
+        }
+      }
+
+      /* 2 — Highlight today's hours row */
+      const hoursTable = document.querySelector('.qc-hours');
+      if (hoursTable) {
+        const rows = hoursTable.querySelectorAll('tr');
+        rows.forEach(row => {
+          const d = row.getAttribute('data-days');
+          if (!d) return;
+          const [lo, hi] = d.includes('-') ? d.split('-').map(Number) : [Number(d), Number(d)];
+          if (day >= lo && day <= hi) row.classList.add('qc-today');
+        });
+      }
+
+      /* 3 — Next Market Day badge */
+      const marketBadge = document.getElementById('qc-market-badge');
+      if (marketBadge) {
+        const text = marketBadge.querySelector('.qc-badge-text');
+        // If today is Sat(6) or Sun(0) the market is on
+        const isWeekend = (day === 0 || day === 6);
+        const daysUntilSat = (6 - day + 7) % 7 || 7;
+        const nextSat = new Date(et);
+        nextSat.setDate(et.getDate() + (isWeekend ? 0 : daysUntilSat));
+
+        const fmt = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: 'America/New_York' });
+        if (isWeekend) {
+          text.textContent = 'Market On Today!';
+        } else {
+          text.textContent = 'Next: Sat ' + fmt.format(nextSat);
+        }
+      }
+    })();
+
+    /* ── Footer: Back to top ── */
+    document.querySelector('.footer-back-to-top')?.addEventListener('click', e => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   </script>
 </body>
 </html>
