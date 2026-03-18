@@ -214,7 +214,8 @@
       padding: 0;
       transform: translateX(100%);
       transition: transform 0.42s var(--ease-bounce);
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
     .mobile-menu::before {
       /* Teal left accent line */
@@ -225,11 +226,13 @@
     }
     .mobile-menu.open { transform: translateX(0); }
 
-    /* Drawer header */
+    /* Drawer header — top padding matches nav bar height so the close
+       button sits exactly where the hamburger pill was */
     .mobile-menu-header {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 1.1rem 1.75rem;
+      padding: max(1.1rem, var(--nav-height, 64px)) 1.75rem 1.1rem;
       border-bottom: 1px solid rgba(255,255,255,0.07);
+      flex-shrink: 0;
     }
     .mobile-menu-eyebrow {
       font-family: var(--font-mono); font-size: 0.65rem; font-weight: 500;
@@ -580,7 +583,7 @@
     .footer-cta-btn-outline:hover { background: #000; color: #fff; box-shadow: 0 10px 24px rgba(0,0,0,0.2); }
 
     /* ── Main footer ── */
-    .footer { background: #0a0a0a; color: #fff; position: relative; overflow: hidden; }
+    .footer { background: #0a0a0a; color: #fff; position: relative; }
     .footer::before {
       content: '';
       position: absolute; inset: 0;
@@ -592,8 +595,8 @@
     }
     .footer-container {
       max-width: min(1200px, 92vw); margin: 0 auto;
-      padding: clamp(4rem, 8vw, 6rem) clamp(1.25rem, 4vw, 2.5rem) 0;
-      position: relative; z-index: 1;
+      padding: clamp(4rem, 8vw, 6rem) clamp(1.25rem, 4vw, 2.5rem) clamp(1.5rem, 4vw, 2.5rem);
+      position: relative;
     }
     /* Top: brand + social */
     .footer-top {
@@ -804,7 +807,7 @@
       .footer-accordion-content { max-height: none !important; overflow: visible !important; padding-bottom: 0 !important; }
       .footer-col-title { display: flex; }
       .mobile-cta-bar { display: none !important; }
-    }
+    } /* end @media (min-width: 769px) */
 
     /* ── Ultrawide cap ── */
     @media (min-width: 1600px) {
@@ -907,11 +910,21 @@
         color: var(--color-teal); font-family: var(--font-mono);
         font-size: 0.72rem; text-transform: uppercase; letter-spacing: 2px;
         min-height: 52px; cursor: pointer;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: rgba(135,214,211,0.15);
       }
       .footer-accordion-trigger .acc-chevron { color: rgba(255,255,255,0.3); font-size: 0.9rem; transition: transform 0.3s var(--ease-bounce); flex-shrink: 0; }
       .footer-accordion-trigger[aria-expanded="true"] .acc-chevron { transform: rotate(180deg); }
-      .footer-accordion-content { overflow: hidden; max-height: 0; height: 0; transition: height 0.4s var(--ease-smooth), padding 0.4s var(--ease-smooth); }
-      .footer-accordion-content.open { height: auto; padding-bottom: 1.25rem; }
+      .footer-accordion-content {
+        overflow: hidden;
+        max-height: 0;
+        padding-bottom: 0;
+        transition: max-height 0.4s var(--ease-smooth), padding-bottom 0.4s var(--ease-smooth);
+      }
+      .footer-accordion-content.open {
+        max-height: 600px;
+        padding-bottom: 1.5rem;
+      }
       .footer-col-title { display: none; }
       .footer-bottom { flex-direction: column-reverse; align-items: center; text-align: center; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 1.5rem; }
       .footer-made-with { display: none; }
@@ -932,6 +945,7 @@
         opacity: 0;
         transform: translateY(100%);
         visibility: hidden;
+        pointer-events: none;
         transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
       }
       .mobile-cta-bar a {
@@ -959,7 +973,7 @@
       .hero .container { gap: 2.5rem; }
       .footer-grid { grid-template-columns: 1fr 1fr; }
       .footer-accordion-trigger { display: none; }
-      .footer-accordion-content { max-height: none !important; overflow: visible !important; }
+      .footer-accordion-content { max-height: none !important; overflow: visible !important; padding-bottom: 0 !important; }
       .footer-col-title { display: flex; }
     }
   </style>
@@ -1368,14 +1382,14 @@
         <!-- Column 1: Visit -->
         <div class="footer-accordion-item">
           <button class="footer-accordion-trigger"
-                  aria-expanded="true"
+                  aria-expanded="false"
                   aria-controls="footer-acc-visit"
                   id="footer-acc-visit-btn">
             Visit Us
             <span class="acc-chevron" aria-hidden="true">▾</span>
           </button>
           <div class="footer-col-title" aria-hidden="true">Visit Us</div>
-          <div class="footer-accordion-content open" id="footer-acc-visit" role="region" aria-labelledby="footer-acc-visit-btn">
+          <div class="footer-accordion-content" id="footer-acc-visit" role="region" aria-labelledby="footer-acc-visit-btn">
             <address class="footer-addr">
               <strong>2501 Champlain Street NW</strong>
               Washington, DC 20009<br>Adams Morgan
@@ -1482,11 +1496,11 @@
     const mobileMenu = document.getElementById('mobile-menu');
     const backdrop   = document.getElementById('mobile-backdrop');
     const closeBtn   = document.getElementById('mobile-menu-close');
+    const nav        = document.getElementById('main-nav');
     let menuOpen = false;
 
-    /* Measure nav height and set CSS variable so drawer starts below it */
+    /* Measure nav height and set CSS variable */
     function setNavHeight() {
-      const nav = document.getElementById('main-nav');
       document.documentElement.style.setProperty('--nav-height', nav.offsetHeight + 'px');
     }
     setNavHeight();
@@ -1499,9 +1513,13 @@
       hamburger.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
       mobileMenu.classList.toggle('open', open);
       backdrop.classList.toggle('open', open);
+      // When open: sink the nav behind the backdrop (z-index 98) so the
+      // full-screen drawer truly covers the header bar.
+      // When closed: restore nav above everything.
+      nav.style.zIndex = open ? '97' : '';
       document.body.style.overflow = open ? 'hidden' : '';
+      document.documentElement.style.overflow = open ? 'hidden' : '';
       if (open) {
-        // Move focus to close button
         requestAnimationFrame(() => closeBtn.focus());
       }
     }
@@ -1532,7 +1550,6 @@
     })();
 
     /* ── Scroll Nav ── */
-    const nav = document.getElementById('main-nav');
     let ticking = false;
     window.addEventListener('scroll', () => {
       if (!ticking) {
@@ -1566,51 +1583,29 @@
     if (ctaBar && footer) {
       const footerObserver = new IntersectionObserver((entries) => {
         ctaBar.classList.toggle('is-hidden', entries[0].isIntersecting);
-      }, { threshold: 0.1 });
+      }, { threshold: 0, rootMargin: '0px 0px -80px 0px' });
       footerObserver.observe(footer);
     }
   </script>
   <script>
     /* ── Footer: Mobile accordion ── */
-    function setAccordionHeight(content, open) {
-      if (open) {
-        // Set explicit px height so the CSS transition has concrete start/end values
-        content.style.height = content.scrollHeight + 'px';
-        content.style.paddingBottom = '1.25rem';
-        // After the transition ends, switch to 'auto' so the panel
-        // isn't clipped if its content changes size later
-        content.addEventListener('transitionend', function onEnd(e) {
-          if (e.propertyName === 'height') {
-            content.style.height = 'auto';
-            content.removeEventListener('transitionend', onEnd);
-          }
-        });
-      } else {
-        // Pin the current height before collapsing so the transition
-        // has a concrete value to animate from
-        content.style.height = content.scrollHeight + 'px';
-        // Force a reflow so the browser registers the explicit height
-        // before we immediately set it to 0
-        content.offsetHeight; // eslint-disable-line no-unused-expressions
-        content.style.height = '0px';
-        content.style.paddingBottom = '';
-      }
-    }
-
     document.querySelectorAll('.footer-accordion-trigger').forEach(trigger => {
       trigger.addEventListener('click', () => {
         const expanded = trigger.getAttribute('aria-expanded') === 'true';
-        const content = document.getElementById(trigger.getAttribute('aria-controls'));
+        const content  = document.getElementById(trigger.getAttribute('aria-controls'));
+
+        // Close all other open panels first (one-open-at-a-time)
+        document.querySelectorAll('.footer-accordion-trigger').forEach(other => {
+          if (other !== trigger && other.getAttribute('aria-expanded') === 'true') {
+            other.setAttribute('aria-expanded', 'false');
+            const otherContent = document.getElementById(other.getAttribute('aria-controls'));
+            if (otherContent) otherContent.classList.remove('open');
+          }
+        });
+
         trigger.setAttribute('aria-expanded', !expanded);
         content.classList.toggle('open', !expanded);
-        setAccordionHeight(content, !expanded);
       });
-    });
-
-    // Initialise panels that are pre-opened in HTML (e.g. first "Visit Us" panel)
-    document.querySelectorAll('.footer-accordion-content.open').forEach(content => {
-      content.style.height = content.scrollHeight + 'px';
-      content.style.paddingBottom = '1.25rem';
     });
 
     /* ── Footer: Dynamic open/closed badge (Eastern Time) ── */
