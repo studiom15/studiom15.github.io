@@ -525,62 +525,8 @@
     .form-input:focus { outline: none; border-color: var(--color-teal); box-shadow: 0 0 0 4px rgba(135,214,211,0.2); }
 
     /* ══════════════════════════════════════════════
-       FOOTER — REDESIGNED
+       FOOTER 
     ══════════════════════════════════════════════ */
-
-    /* ── Pre-footer CTA band ── */
-    .footer-cta-band {
-      background: var(--color-teal);
-      border-top: 2px solid #000;
-      border-bottom: 2px solid #000;
-      overflow: hidden;
-      position: relative;
-    }
-    .footer-cta-band::before {
-      content: '';
-      position: absolute; inset: 0;
-      background-image: repeating-linear-gradient(
-        -45deg, transparent, transparent 18px,
-        rgba(0,0,0,0.04) 18px, rgba(0,0,0,0.04) 20px
-      );
-      pointer-events: none;
-    }
-    .footer-cta-inner {
-      max-width: min(1200px, 92vw);
-      margin: 0 auto;
-      padding: clamp(2.5rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2.5rem);
-      display: flex; align-items: center;
-      justify-content: space-between;
-      gap: 2rem; flex-wrap: wrap;
-    }
-    .footer-cta-text {
-      font-family: var(--font-heading); font-weight: 700;
-      font-size: clamp(1.6rem, 3.5vw, 2.6rem);
-      line-height: 1.1; color: #000;
-    }
-    .footer-cta-text em {
-      font-family: var(--font-hand); font-style: normal;
-      color: var(--color-magenta); font-size: 1.18em;
-      display: inline-block; transform: rotate(-3deg); margin-left: 0.15em;
-      transition: transform 0.4s var(--ease-bounce);
-    }
-    .footer-cta-text:hover em { transform: rotate(-6deg) scale(1.08); }
-    .footer-cta-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; flex-shrink: 0; }
-    .footer-cta-btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      border-radius: 999px; font-weight: 700; font-family: var(--font-mono);
-      font-size: clamp(0.72rem, 1.1vw, 0.82rem);
-      text-transform: uppercase; border: 2px solid #000;
-      padding: 0.85rem 1.75rem;
-      transition: transform 0.3s var(--ease-bounce), box-shadow 0.3s var(--ease-smooth), background 0.25s ease;
-      white-space: nowrap;
-    }
-    .footer-cta-btn:hover { transform: translateY(-3px) scale(1.02); }
-    .footer-cta-btn:active { transform: scale(0.97); }
-    .footer-cta-btn-primary { background: var(--color-magenta); border-color: var(--color-magenta); color: #fff; }
-    .footer-cta-btn-primary:hover { background: var(--color-magenta-dark); border-color: var(--color-magenta-dark); box-shadow: 0 10px 24px rgba(205,2,130,0.35); }
-    .footer-cta-btn-outline { background: transparent; color: #000; border-color: #000; }
-    .footer-cta-btn-outline:hover { background: #000; color: #fff; box-shadow: 0 10px 24px rgba(0,0,0,0.2); }
 
     /* ── Main footer ── */
     .footer { background: #0a0a0a; color: #fff; position: relative; }
@@ -1202,6 +1148,7 @@
       </div>
     </section>
 
+    <!-- Move to shop page -->
     <!-- <section class="section" aria-labelledby="gift-trade-heading">
       <div class="container">
         <h2 id="gift-trade-heading" class="sr-only">Gift Cards and Trade</h2>
@@ -1253,16 +1200,8 @@
       <div class="footer-top">
         <div class="footer-brand">
           <div class="footer-logo-row">
-            <!-- <svg class="footer-record-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <circle cx="22" cy="22" r="21" fill="#111" stroke="#333" stroke-width="1.5"/>
-              <circle cx="22" cy="22" r="15" fill="none" stroke="#222" stroke-width="1"/>
-              <circle cx="22" cy="22" r="10" fill="none" stroke="#222" stroke-width="1"/>
-              <circle cx="22" cy="22" r="5.5" fill="white"/>
-              <circle cx="22" cy="22" r="2" fill="#87D6D3"/>
-            </svg> -->
             <span class="footer-logo-wordmark">TINY<span> VINYL</span> SHOP</span>
           </div>
-          <!-- <p class="footer-tagline">"A neighborhood place for music lovers."</p> -->
           <address class="footer-address-mini" style="font-style:normal;">
             2501 Champlain Street NW<br>
             Washington, DC · Adams Morgan
@@ -1288,7 +1227,6 @@
               <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
             </svg> Email          
         </a>
-          <!-- Change this to email  -->
         </nav>
       </div>
 
