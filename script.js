@@ -235,3 +235,53 @@ gsap.fromTo(".play-card",
         scrollTrigger: { trigger: ".play-secondary", start: "top 85%" }
     }
 );
+/* ================================================
+   9. PROJECT MODALS
+================================================ */
+function openProjectModal(id) {
+    const overlay = document.getElementById(id);
+    if (!overlay) return;
+    overlay.classList.add('is-open');
+    document.body.classList.add('modal-open');
+}
+
+function closeProjectModal(id) {
+    const overlay = document.getElementById(id);
+    if (!overlay) return;
+    overlay.classList.remove('is-open');
+    document.body.classList.remove('modal-open');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Wire up each card that has a data-modal attribute
+    document.querySelectorAll('.project-card[data-modal]').forEach(function (card) {
+        card.addEventListener('click', function (e) {
+            e.preventDefault();
+            openProjectModal(card.getAttribute('data-modal'));
+        });
+    });
+
+    // Close buttons
+    document.querySelectorAll('.project-modal-close').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var overlay = btn.closest('.project-modal-overlay');
+            if (overlay) closeProjectModal(overlay.id);
+        });
+    });
+
+    // Close on backdrop click
+    document.querySelectorAll('.project-modal-overlay').forEach(function (overlay) {
+        overlay.addEventListener('click', function (e) {
+            if (e.target === overlay) closeProjectModal(overlay.id);
+        });
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.project-modal-overlay.is-open')
+                .forEach(function (el) { closeProjectModal(el.id); });
+        }
+    });
+});
